@@ -58,7 +58,7 @@ const classes = [
   "高3医進数学(樋口(哲)先生)",
   "高1・2難関物理(杉山先生)",
   "高2難関英語-ハイレベル(中高一貫)(是枝先生)",
-  "高3特別選抜理系数学3C(郷田先生)"
+  "高3特別選抜理系数学3C(郷田先生)",
   "中1アドバンスト数学(速習）(成合先生)",
   "中2アドバンスト英語(速習）(秋谷先生)",
   "中3アドバンスト数学(速習）(田井先生)",
@@ -74,10 +74,10 @@ const classes = [
   "高3難関漢文-二次・私大対応（光田先生)",
   "高3標準生物(田中（義）先生)",
   "高3早慶大英語（奥脇先生)",
-  "高3医系小論文(宮本先生)"
+  "高3医系小論文(宮本先生)",
   "高3早慶大英語(近嵐先生)",
   "高3医進数学(隣先生)",
-　"高3難関現代文-二次・私大対応(手塚先生)",
+  "高3難関現代文-二次・私大対応(手塚先生)",
   "高3難関数学1A2BC(亀山先生)",
   "中1アドバンスト数学(速習）(佐藤健先生)",
   "中2アドバンスト英語(速習）(高橋（保）先生)",
@@ -131,14 +131,14 @@ function generate() {
   const dateStr = document.getElementById("date").value;
   const formattedDate = formatDate(dateStr);
 
-  const classes = [...document.querySelectorAll(".class-input")]
+  const selectedClasses = [...document.querySelectorAll(".class-input")]
                    .map(c => c.value).filter(c => c);
 
   const text =
 `お疲れ様です！${name}です。
 ${reason}のため、代行を募集します。
 ${formattedDate}
-${classes.join("\n")}
+${selectedClasses.join("\n")}
 ご迷惑をおかけしますがよろしくお願いします`;
 
   document.getElementById("result").textContent = text;
