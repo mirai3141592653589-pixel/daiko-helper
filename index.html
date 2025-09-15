@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>代行募集フォーム</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+    input, button { font-size: 16px; padding: 5px; margin: 5px 0; width: 100%; }
+    .class-input { margin-bottom: 8px; }
+    #result { white-space: pre-wrap; background: #f5f5f5; padding: 10px; border-radius: 5px; }
+    .candidate { background: #eee; padding: 5px; margin: 2px 0; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>代行募集テンプレート</h2>
+
+  <label>名前：</label>
+  <input id="name"><br>
+
+  <label>理由：</label>
+  <input id="reason" placeholder="例：私用のため"><br>
+
+  <label>日付：</label>
+  <input type="date" id="date"><br>
+
+  <h3>授業名（最大5つ）</h3>
+  <input class="class-input" placeholder="授業名を入力">
+  <div class="suggestions"></div>
+  <input class="class-input" placeholder="授業名を入力">
+  <div class="suggestions"></div>
+  <input class="class-input" placeholder="授業名を入力">
+  <div class="suggestions"></div>
+  <input class="class-input" placeholder="授業名を入力">
+  <div class="suggestions"></div>
+  <input class="class-input" placeholder="授業名を入力">
+  <div class="suggestions"></div>
+
+  <button onclick="generate()">文を生成</button>
+  <button onclick="copyText()">コピー</button>
+
+  <h3>プレビュー</h3>
+  <pre id="result"></pre>
+
+<script>
+// 授業マスタ（例。ここに全学年・全科目・全先生を入れる）
+const classes = [
+  "高3特別選抜数学（山田先生）",
+  "高3特別選抜英語（佐藤先生）",
+  "高3特別選抜化学（鈴木先生）",
+  "高2標準数学（田中先生）",
+  "高1基礎英語（佐藤先生）"
+];
+
+// オートコンプリート機能
+document.querySelectorAll(".class-input").forEach((input, idx) => {
+  input.addEventListener("input", function() {
+    const query = this.value.trim();
+    const suggestions = this.nextElementSibling;
+    suggestions.innerHTML = "";
+    if (!query) return;
+    const filtered = classes.filter(c => c.includes(query)).slice(0,5);
+    filtered.forEach(item => {
+      const div = document.createElement("div");
+      div.textContent = item;
+      div.className = "candidate";
+      div.onclick = () => { input.value = item; suggestions.innerHTML = ""; };
+      suggestions.appendChild(div);
+    });
+  });
+});
+
+// 日本語日付フォーマット
+function formatDate(dateStr) {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+  const weekday = weekdays[date.getDay()];
+  return `${date.getMonth()+1}月${date.getDate()}日（${weekday}）`;
+}
+
+// 文生成
+function generate() {
+  const name = document.getElementById("name").value;
+  const reason = document.getElementById("reason").value;
+  const dateStr = document.getElementById("date").value;
+  const formattedDate = formatDate(dateStr);
+
+  const classes = [...document.querySelectorAll(".class-input")]
+                   .map(c => c.value).filter(c => c);
+
+  const text =
+`お疲れ様です！${name}です。
+${reason}のため、代行を募集します。
+${formattedDate}
+${classes.join("\n")}
+ご迷惑をおかけしますがよろしくお願いします`;
+
+  document.getElementById("result").textContent = text;
+}
+
+// コピー機能
+function copyText() {
+  const text = document.getElementById("result").textContent;
+  if (!text) { alert("先に文を生成してください"); return; }
+  navigator.clipboard.writeText(text).then(() => {
+    alert("コピーしました！LINEに貼り付けてください。");
+  });
+}
+</script>
+</body>
+</html>
